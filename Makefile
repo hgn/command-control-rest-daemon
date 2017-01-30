@@ -7,10 +7,10 @@ install_deps:
 help:
 	@echo
 	@echo "now call sudo systemctl daemon-reload"
-	@echo ".. enable service via: sudo systemctl enable command-control-rest-daemon.service"
-	@echo ".. start service via:  sudo systemctl start command-control-rest-daemon.service"
-	@echo ".. status via:         sudo systemctl status command-control-rest-daemon.service"
-	@echo ".. log info via:       sudo journalctl -u command-control-rest-daemon.service"
+	@echo ".. enable service via: sudo systemctl enable command-control-rest-daemon"
+	@echo ".. start service via:  sudo systemctl start command-control-rest-daemon"
+	@echo ".. status via:         sudo systemctl status command-control-rest-daemon"
+	@echo ".. log info via:       sudo journalctl -u command-control-rest-daemon"
 
 install:
 	install -m 755 -T command-control-rest-daemon.py /usr/bin/command-control-rest-daemon
