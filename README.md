@@ -10,6 +10,10 @@ make install will print more information. I.e. how to start and integrate this s
 
 # Simple Tests #
 
+command-control-rest-daemon comes bundled with an example script. This minimal
+example script has minimal dependencies (limited to Pythons stdlib) and show
+all features of the command-control-rest-daemon.
+
 ```
-http_proxy=""; curl -i -X POST -H "Content-Type:application/json" http://localhost:50023/v1/raw/ -d '[ "ls /" ]'
+scripts/example.py
 ```
