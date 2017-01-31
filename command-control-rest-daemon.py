@@ -67,6 +67,12 @@ def execute_commands(commands):
     return 'ok'
 
 
+def webfailure(msg):
+    response_data = {'status': 'failure', "message": msg}
+    body = json.dumps(response_data).encode('utf-8')
+    return aiohttp.web.Response(body=body, content_type="application/json")
+
+
 async def handle_exec(request):
     loop = request.app['LOOP']
     try:
@@ -88,10 +94,47 @@ async def handle_exec(request):
     return aiohttp.web.Response(body=body, content_type="application/json")
 
 
+def handle_file_upload(request):
+    if not "data" in request:
+        return webfailure("no data to upload")
+    if not "path" in request:
+        return webfailure("no path for upload given")
+    path = request['path']
+    if os.path.isfile(path):
+        return webfailure("file already available at {}, cannot overwrite".format(path))
+
+
+def handle_file_dowload(request):
+    if not "path" in request:
+        return webfailure("no path argument given")
+    if not os.path.isfile(request['path']):
+        return webfailure("path not a file: {}".format(request['path']))
+    print("downloading {}".format(request['path']))
+
+
+async def handle_file(request):
+    loop = request.app['LOOP']
+    try:
+        request_data = await request.json()
+    except json.decoder.JSONDecodeError:
+        return webfailure("data not properly formated")
+
+    if "mode" not in request_data:
+        return webfailure("no mode specified")
+
+    mode = request_data['mode']
+    if mode == "upload":
+        return handle_file_upload(request_data)
+    if mode == "download":
+        return handle_file_dowload(request_data)
+    return webfailure("mode must be download or upload")
+
+
 def http_init(loop):
     app = aiohttp.web.Application(loop=loop)
     app['LOOP'] = loop
     app.router.add_route('POST', "/api/v1/exec", handle_exec)
+    app.router.add_route('POST', "/api/v1/file", handle_file)
     server = loop.create_server(app.make_handler(),
                                 conf.common.v4_listen_addr,
                                 conf.common.v4_listen_port)
