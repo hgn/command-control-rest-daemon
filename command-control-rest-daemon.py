@@ -48,10 +48,12 @@ def msg(msg):
 
 def execute_command(cmd):
     print("execute: {}".format(cmd))
+    args = cmd['cmd'].split()
     use_shell = False
     if 'shell' in cmd and cmd['shell'] == True:
+        args = cmd['cmd']
         use_shell = True
-    process = subprocess.Popen(cmd['cmd'].split(), shell=use_shell)
+    process = subprocess.Popen(args, shell=use_shell)
     if 'wait' in cmd and cmd['wait'] == True:
         process.wait()
 
