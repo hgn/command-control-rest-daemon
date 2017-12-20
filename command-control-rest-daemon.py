@@ -50,10 +50,13 @@ def execute_command(cmd):
     print("execute: {}".format(cmd))
     args = cmd['cmd'].split()
     use_shell = False
+    stdout = None
     if 'shell' in cmd and cmd['shell'] == True:
         args = cmd['cmd']
         use_shell = True
-    process = subprocess.Popen(args, shell=use_shell)
+    if 'silent' in cmd and cmd['silent'] == True:
+        stdout = subprocess.DEVNULL
+    process = subprocess.Popen(args, stdout=stdout, shell=use_shell)
     if 'wait' in cmd and cmd['wait'] == True:
         process.wait()
 
