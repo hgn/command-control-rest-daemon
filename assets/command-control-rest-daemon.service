@@ -3,6 +3,7 @@ Description=Command and Control REST Daemon
 
 [Service]
 Type=simple
+Environment=PYTHONUNBUFFERED
 ExecStart=/usr/bin/python3 /usr/bin/command-control-rest-daemon -f /etc/command-control-rest-daemon/conf.json
 
 [Install]
